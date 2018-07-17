@@ -28,6 +28,12 @@
     <TableRow>
 
         <TextView
+            android:id="@+id/number0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" " />
+
+        <TextView
             android:id="@+id/number1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,16 +51,43 @@
             android:layout_height="wrap_content"
             android:text=" " />
 
+    </TableRow>
+    <GridLayout
+        android:rowCount="2"
+        android:columnCount="2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:useDefaultMargins="true"
+        android:padding="10dp">
+
         <TextView
-            android:id="@+id/number4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" " />
+            android:id="@+id/multiplesOf2"
+            android:text="Multiples of 2"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-    </TableRow>
-    <TableRow>
+        <TextView
+            android:id="@+id/multiplesOf3"
+            android:text="Multiples of 3"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
 
-        
-    </TableRow>
+        <TextView
+            android:id="@+id/multiplesOf5"
+            android:text="Multiples of 5"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+
+        <TextView
+            android:id="@+id/multiplesOf10"
+            android:text="Multiples of 10"
+            android:layout_gravity="fill"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+
+    </GridLayout>
 
 </TableLayout>
