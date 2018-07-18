@@ -67,7 +67,7 @@
 
     </GridLayout>
     <android.support.v7.widget.GridLayout
-        app:rowCount="2"
+        app:rowCount="4"
         app:columnCount="2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -75,29 +75,49 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/multiplesOf2"
+            android:id="@+id/multiplesOf2Title"
             android:text="Multiples of 2"
+            app:layout_columnWeight="1" />
+
+        <TextView
+            android:id="@+id/multiplesOf3Title"
+            android:text="Multiples of 3"
+            app:layout_columnWeight="1" />
+
+        <TextView
+            android:id="@+id/multiplesOf2"
+            android:text=""
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/multiplesOf3"
-            android:text="Multiples of 3"
+            android:text=""
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />
 
         <TextView
-            android:id="@+id/multiplesOf5"
+            android:id="@+id/multiplesOf5Title"
             android:text="Multiples of 5"
+            app:layout_columnWeight="1" />
+
+        <TextView
+            android:id="@+id/multiplesOf10Title"
+            android:text="Multiples of 10"
+            app:layout_columnWeight="1" />
+
+        <TextView
+            android:id="@+id/multiplesOf5"
+            android:text=""
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/multiplesOf10"
-            android:text="Multiples of 10"
+            android:text=""
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />

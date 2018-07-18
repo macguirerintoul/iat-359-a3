@@ -1,6 +1,7 @@
 package com.mrintoul.macguirerintoul_a3;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -108,17 +109,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //stop displaying the view where it was before it was dragged
                 view.setVisibility(View.INVISIBLE);
 
-                //view dragged item is being dropped on
+                // view dragged item is being dropped on
                 TextView dropTarget = (TextView) v;
 
-                //view being dragged and dropped
+                // view being dropped
                 TextView dropped = (TextView) view;
 
-                //update the text in the target view to reflect the data being dropped
-                dropTarget.setText(""+ dropTarget.getText()+" = " +dropped.getText());
+                if (Integer.valueOf((String) dropped.getText()) % Integer.valueOf((String) dropTarget.getText()) == 0) {
+                    // check to make sure the value being dropped is a multiple of the
+                    //update the text in the target view to reflect the data being dropped
+                    dropTarget.setText(dropTarget.getText() + " " + dropped.getText());
 
-                //make it bold to highlight the fact that an item has been dropped
-                dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
+                    //make it bold to highlight the fact that an item has been dropped
+                    dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
+                }
+
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
