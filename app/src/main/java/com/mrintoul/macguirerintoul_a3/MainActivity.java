@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -23,11 +24,17 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button retrieveButton;
+    TextView[] textViews = new TextView[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textViews[0] = findViewById(R.id.number0);
+        textViews[1] = findViewById(R.id.number1);
+        textViews[2] = findViewById(R.id.number2);
+        textViews[3] = findViewById(R.id.number3);
 
         retrieveButton = findViewById(R.id.retrieve);
         retrieveButton.setOnClickListener(this);
@@ -101,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getBaseContext(), String.valueOf(numberData.get(1)), Toast.LENGTH_SHORT).show();
 
                 // set each textview as the numbers
+                for (int i = 0; i < numberData.length(); i++) {
+                    textViews[i].setText(String.valueOf(numberData.get(i)));
+                }
             } catch (Exception e) {
                 Log.d("exception", "onPostExecute");
                 e.printStackTrace();
