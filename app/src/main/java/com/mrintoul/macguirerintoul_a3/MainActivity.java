@@ -1,10 +1,14 @@
 package com.mrintoul.macguirerintoul_a3;
 
+import android.content.ClipData;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,9 +26,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button retrieveButton;
-    TextView[] textViews = new TextView[4];
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener, View.OnDragListener {
+    Button retrieveButton, clearButton; // buttons
+    TextView[] textViews = new TextView[4]; // array of textviews for the 4 random numbers
+    TextView multiplesOf2, multiplesOf3, multiplesOf5, multiplesOf10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +41,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textViews[2] = findViewById(R.id.number2);
         textViews[3] = findViewById(R.id.number3);
 
+        multiplesOf2 = findViewById(R.id.multiplesOf2);
+        multiplesOf3 = findViewById(R.id.multiplesOf3);
+        multiplesOf5 = findViewById(R.id.multiplesOf5);
+        multiplesOf10 = findViewById(R.id.multiplesOf10);
+
+        // set touch listeners
+        textViews[0].setOnTouchListener(this);
+        textViews[1].setOnTouchListener(this);
+        textViews[2].setOnTouchListener(this);
+        textViews[3].setOnTouchListener(this);
+
+        // set drag listeners
+        multiplesOf2.setOnDragListener(this);
+        multiplesOf3.setOnDragListener(this);
+        multiplesOf5.setOnDragListener(this);
+        multiplesOf10.setOnDragListener(this);
+
         retrieveButton = findViewById(R.id.retrieve);
         retrieveButton.setOnClickListener(this);
+
+        clearButton = findViewById(R.id.clear);
+        clearButton.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +73,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            //the user has touched the View to drag it
+            //prepare the drag
+            ClipData data = ClipData.newPlainText("","");
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+            //start dragging the item touched
+            view.startDrag(data, shadowBuilder, view, 0);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onDrag(View v, DragEvent dragEvent) {
+        switch (dragEvent.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                //no action necessary
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                //no action necessary
+                break;
+            case DragEvent.ACTION_DROP:
+                //handle the dragged view being dropped over a target view
+                View view = (View) dragEvent.getLocalState();
+
+                //stop displaying the view where it was before it was dragged
+                view.setVisibility(View.INVISIBLE);
+
+                //view dragged item is being dropped on
+                TextView dropTarget = (TextView) v;
+
+                //view being dragged and dropped
+                TextView dropped = (TextView) view;
+
+                //update the text in the target view to reflect the data being dropped
+                dropTarget.setText(""+ dropTarget.getText()+" = " +dropped.getText());
+
+                //make it bold to highlight the fact that an item has been dropped
+                dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
+
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+                //no action necessary
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
 
     private String readJSONData(String myurl) throws IOException {
         InputStream is = null;
