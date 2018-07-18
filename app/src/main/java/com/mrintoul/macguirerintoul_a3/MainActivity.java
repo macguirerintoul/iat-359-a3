@@ -105,12 +105,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray numberData = jsonObject.getJSONArray("data");
-                Toast.makeText(getBaseContext(), String.valueOf(numberData.get(1)), Toast.LENGTH_SHORT).show();
+                String toastText = "";
 
                 // set each textview as the numbers
                 for (int i = 0; i < numberData.length(); i++) {
                     textViews[i].setText(String.valueOf(numberData.get(i)));
+                    toastText += " " + String.valueOf(numberData.get(i));
                 }
+
+                //display the numbers in a toast
+                Toast.makeText(getBaseContext(), toastText, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Log.d("exception", "onPostExecute");
                 e.printStackTrace();

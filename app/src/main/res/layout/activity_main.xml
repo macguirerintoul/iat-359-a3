@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <TableRow>
         <Button
@@ -25,6 +29,7 @@
             tools:layout_editor_absoluteY="25dp" />
 
     </TableRow>
+    </TableLayout>
     <GridLayout
         android:rowCount="1"
         android:columnCount="4"
@@ -61,42 +66,42 @@
             android:text="" />
 
     </GridLayout>
-    <GridLayout
-        android:rowCount="2"
-        android:columnCount="2"
+    <android.support.v7.widget.GridLayout
+        app:rowCount="2"
+        app:columnCount="2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:useDefaultMargins="true"
+        app:useDefaultMargins="true"
         android:padding="10dp">
 
         <TextView
             android:id="@+id/multiplesOf2"
             android:text="Multiples of 2"
-            android:layout_gravity="fill"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"/>
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/multiplesOf3"
             android:text="Multiples of 3"
-            android:layout_gravity="fill"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"/>
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/multiplesOf5"
             android:text="Multiples of 5"
-            android:layout_gravity="fill"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"/>
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/multiplesOf10"
             android:text="Multiples of 10"
-            android:layout_gravity="fill"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"/>
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            app:layout_columnWeight="1" />
 
-    </GridLayout>
+    </android.support.v7.widget.GridLayout>
 
-</TableLayout>
+</LinearLayout>
