@@ -2,6 +2,7 @@ package com.mrintoul.macguirerintoul_a3;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -106,25 +107,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //handle the dragged view being dropped over a target view
                 View view = (View) dragEvent.getLocalState();
 
-                //stop displaying the view where it was before it was dragged
-                view.setVisibility(View.INVISIBLE);
+
 
                 // view dragged item is being dropped on
                 TextView dropTarget = (TextView) v;
 
-                // view being dropped
+                // view being dropped and the value of the view being dropped
                 TextView dropped = (TextView) view;
+                Integer droppedValue = Integer.valueOf((String) dropped.getText());
 
-                if (Integer.valueOf((String) dropped.getText()) % Integer.valueOf((String) dropTarget.getText()) == 0) {
-                    // check to make sure the value being dropped is a multiple of the
+                // boolean whether or not the dropped view is a multiple of the target view's value
+                Boolean isMultiple = false;
+
+                switch (dropTarget.getId()) {
+                    case R.id.multiplesOf2:
+                        if (droppedValue % 2 == 0) {
+                            isMultiple = true;
+                        }
+                        break;
+                    case R.id.multiplesOf3:
+                        if (droppedValue % 3 == 0) {
+                            isMultiple = true;
+                        }
+                        break;
+                    case R.id.multiplesOf5:
+                        if (droppedValue % 5 == 0) {
+                            isMultiple = true;
+                        }
+                        break;
+                    case R.id.multiplesOf10:
+                        if (droppedValue % 10 == 0) {
+                            isMultiple = true;
+                        }
+                        break;
+                }
+
+                if (isMultiple) {
+                    //stop displaying the view where it was before it was dragged
+                    view.setVisibility(View.INVISIBLE);
+                    
                     //update the text in the target view to reflect the data being dropped
                     dropTarget.setText(dropTarget.getText() + " " + dropped.getText());
 
                     //make it bold to highlight the fact that an item has been dropped
                     dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
                 }
-
-
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 //no action necessary
@@ -134,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return true;
     }
-
 
     private String readJSONData(String myurl) throws IOException {
         InputStream is = null;

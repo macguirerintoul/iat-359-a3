@@ -87,6 +87,7 @@
         <TextView
             android:id="@+id/multiplesOf2"
             android:text=""
+            app:multipleOf="2"
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />
@@ -94,6 +95,7 @@
         <TextView
             android:id="@+id/multiplesOf3"
             android:text=""
+            app:multipleOf="3"
             app:layout_gravity="fill"
             app:layout_rowWeight="1"
             app:layout_columnWeight="1" />
