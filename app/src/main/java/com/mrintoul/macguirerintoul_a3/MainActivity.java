@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.retrieve:
                 if (checkConnection()) {
                     clear();
+                    /*
+                    this is for testing when the API is down
+                    for (int i = 0; i < 4; i++) {
+                        textViews[i].setText(String.valueOf(i));
+                    }
+                    */
                     new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
                 }
                 break;
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // view dragged item is being dropped on
                 TextView dropTarget = (TextView) v;
+                Integer dropTargetMultiple = Integer.valueOf((String) dropTarget.getContentDescription());
 
                 // view being dropped and the value of the view being dropped
                 TextView dropped = (TextView) view;
@@ -155,31 +162,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // boolean whether or not the dropped view is a multiple of the target view's value
                 Boolean isMultiple = false;
 
-                switch (dropTarget.getId()) {
-                    case R.id.multiplesOf2:
-                        if (droppedValue % 2 == 0) {
-                            isMultiple = true;
-                        }
-                        break;
-                    case R.id.multiplesOf3:
-                        if (droppedValue % 3 == 0) {
-                            isMultiple = true;
-                        }
-                        break;
-                    case R.id.multiplesOf5:
-                        if (droppedValue % 5 == 0) {
-                            isMultiple = true;
-                        }
-                        break;
-                    case R.id.multiplesOf10:
-                        if (droppedValue % 10 == 0) {
-                            isMultiple = true;
-                        }
-                        break;
+                if (droppedValue % dropTargetMultiple == 0) {
+                    isMultiple = true;
                 }
 
                 if (isMultiple) {
-                    //stop displaying the view where it was before it was dragged
+                    //stop displaying the value where it was before it was dragged
                     view.setVisibility(View.INVISIBLE);
 
                     //update the text in the target view to reflect the data being dropped
