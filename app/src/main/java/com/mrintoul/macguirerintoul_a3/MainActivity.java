@@ -1,10 +1,13 @@
 package com.mrintoul.macguirerintoul_a3;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener, View.OnDragListener {
     Button retrieveButton, clearButton; // buttons
     TextView[] textViews = new TextView[4]; // array of textviews for the 4 random numbers
+    TextView[] multiples = new TextView[4];
     TextView multiplesOf2, multiplesOf3, multiplesOf5, multiplesOf10;
 
     @Override
@@ -47,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         multiplesOf3 = findViewById(R.id.multiplesOf3);
         multiplesOf5 = findViewById(R.id.multiplesOf5);
         multiplesOf10 = findViewById(R.id.multiplesOf10);
+
+        multiples[0] = multiplesOf2;
+        multiples[1] = multiplesOf3;
+        multiples[2] = multiplesOf5;
+        multiples[3] = multiplesOf10;
 
         // set touch listeners
         textViews[0].setOnTouchListener(this);
@@ -71,8 +80,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.retrieve:
-                new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
+                if (checkConnection()) {
+                    clear();
+                    new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
+                }
                 break;
+            case R.id.clear:
+                // clear all the textviews
+                clear();
+                break;
+        }
+    }
+
+    // resets the textviews when clear button is clicked
+    public void clear() {
+        for (int i = 0; i < 4; i++) {
+            textViews[i].setText("");
+            textViews[i].setVisibility(View.VISIBLE);
+            multiples[i].setText("");
+        }
+    }
+
+    public boolean checkConnection(){
+        ConnectivityManager connectMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectMgr.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            //fetch data
+            return true;
+        } else {
+            //display error
+            Toast.makeText(this, "no network connection", Toast.LENGTH_LONG).show();
+            return false;
         }
     }
 
@@ -106,8 +144,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case DragEvent.ACTION_DROP:
                 //handle the dragged view being dropped over a target view
                 View view = (View) dragEvent.getLocalState();
-
-
 
                 // view dragged item is being dropped on
                 TextView dropTarget = (TextView) v;
@@ -145,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (isMultiple) {
                     //stop displaying the view where it was before it was dragged
                     view.setVisibility(View.INVISIBLE);
-                    
+
                     //update the text in the target view to reflect the data being dropped
                     dropTarget.setText(dropTarget.getText() + " " + dropped.getText());
 
