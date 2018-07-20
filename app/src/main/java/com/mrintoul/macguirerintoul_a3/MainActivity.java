@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    // returns a string from JSON
     private String readJSONData(String myurl) throws IOException {
         InputStream is = null;
         int len = 2500;
@@ -199,31 +200,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         try {
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("tag", "The response is: " + response);
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is, len);
-            return contentAsString;
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
+            conn.setReadTimeout(10000); // timeout of reading in ms
+            conn.setConnectTimeout(15000); // timeout of connecting in ms
+            conn.setRequestMethod("GET"); // request method
+            conn.setDoInput(true); // say we're reading data from this connection
+            conn.connect(); // make it happen
+            int response = conn.getResponseCode(); // response code of request
+            Log.d("tag", "The response is: " + response); // let us know
+            is = conn.getInputStream(); // retrieve the inputstream
+            return readIt(is, len); // inputstream to string via readIt
         } finally {
             if (is != null) {
-                is.close();
-                conn.disconnect();
+                is.close(); // close the input stream
+                conn.disconnect(); // close the connection
             }
         }
     }
 
-    // Reads an InputStream and converts it to a String.
+    // converts inputstream to string
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
@@ -232,12 +226,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return new String(buffer);
     }
 
+    // asynctask to retrieve random numbers from a JSON api
     class RetrieveNumbersTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... urls) {
             try {
-                return readJSONData(urls[0]);
+                return readJSONData(urls[0]); // get the stringified JSON data from the url passed in
             } catch(IOException e){
+                // didn't work
                 e.printStackTrace();
                 return null;
             }
@@ -245,11 +241,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         protected void onPostExecute(String result) {
             try {
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray numberData = jsonObject.getJSONArray("data");
-                String toastText = "";
+                JSONObject jsonObject = new JSONObject(result); // initialize json object
+                JSONArray numberData = jsonObject.getJSONArray("data"); // initialize json array of the data
+                String toastText = ""; // the string to be displayed in the toast
 
-                // set each textview as the numbers
+                // set each textview as the numbers in data
                 for (int i = 0; i < numberData.length(); i++) {
                     textViews[i].setText(String.valueOf(numberData.get(i)));
                     toastText += " " + String.valueOf(numberData.get(i));
@@ -258,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //display the numbers in a toast
                 Toast.makeText(getBaseContext(), toastText, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
+                // didn't work
                 Log.d("exception", "onPostExecute");
                 e.printStackTrace();
             }
