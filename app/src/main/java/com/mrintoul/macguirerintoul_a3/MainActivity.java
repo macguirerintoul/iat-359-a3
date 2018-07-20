@@ -80,14 +80,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.retrieve:
                 if (checkConnection()) {
                     clear(); // clear numbers and drop areas
-
-                    // this is for testing when the API is down
-                    for (int i = 0; i < 4; i++) {
-                        textViews[i].setText(String.valueOf(i));
-                    }
+//                    // this is for testing when the API is down
+//                    for (int i = 0; i < 4; i++) {
+//                        textViews[i].setText(String.valueOf(i));
+//                    }
 
                     // retrieve 4 random numbers from API
-                    //new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
+                    new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
                 }
                 break;
             case R.id.clear:
@@ -193,11 +192,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // returns a string from JSON
     private String readJSONData(String myurl) throws IOException {
-        InputStream is = null;
-        int len = 2500;
+        InputStream is = null; // initialize an empty inputstream
+        int len = 2500; // how many characters to read from the inputstream
 
-        URL url = new URL(myurl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        URL url = new URL(myurl); // get the URL argument
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // create a connection to the URL
 
         try {
             conn.setReadTimeout(10000); // timeout of reading in ms
