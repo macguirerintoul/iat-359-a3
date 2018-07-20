@@ -30,42 +30,46 @@
 
     </TableRow>
     </TableLayout>
-    <GridLayout
-        android:rowCount="1"
-        android:columnCount="4"
+    <android.support.v7.widget.GridLayout
+        app:rowCount="1"
+        app:columnCount="4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:useDefaultMargins="true">
+        app:useDefaultMargins="true">
 
         <TextView
             android:id="@+id/number0"
-            android:textSize="24sp"
+            android:textSize="36sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
             android:text="" />
 
         <TextView
             android:id="@+id/number1"
-            android:textSize="24sp"
+            android:textSize="36sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
             android:text="" />
 
         <TextView
             android:id="@+id/number2"
-            android:textSize="24sp"
+            android:textSize="36sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" " />
+            app:layout_columnWeight="1"
+            android:text="" />
 
         <TextView
             android:id="@+id/number3"
-            android:textSize="24sp"
+            android:textSize="36sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
             android:text="" />
 
-    </GridLayout>
+    </android.support.v7.widget.GridLayout>
     <android.support.v7.widget.GridLayout
         app:rowCount="4"
         app:columnCount="2"
