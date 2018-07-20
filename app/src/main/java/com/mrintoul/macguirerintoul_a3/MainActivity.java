@@ -2,9 +2,6 @@ package com.mrintoul.macguirerintoul_a3;
 
 import android.content.ClipData;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,10 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,29 +24,31 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener, View.OnDragListener {
     Button retrieveButton, clearButton; // buttons
     TextView[] textViews = new TextView[4]; // array of textviews for the 4 random numbers
-    TextView[] multiples = new TextView[4];
-    TextView multiplesOf2, multiplesOf3, multiplesOf5, multiplesOf10;
+    TextView[] multiples = new TextView[4]; // array of textviews for the 4 drop locations
+    TextView multiplesOf2, multiplesOf3, multiplesOf5, multiplesOf10; // textviews of the drop locations
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // add the number textviews to the array
         textViews[0] = findViewById(R.id.number0);
         textViews[1] = findViewById(R.id.number1);
         textViews[2] = findViewById(R.id.number2);
         textViews[3] = findViewById(R.id.number3);
 
+        // initialize the textviews of the drop areas
         multiplesOf2 = findViewById(R.id.multiplesOf2);
         multiplesOf3 = findViewById(R.id.multiplesOf3);
         multiplesOf5 = findViewById(R.id.multiplesOf5);
         multiplesOf10 = findViewById(R.id.multiplesOf10);
 
+        // add drop areas to the array
         multiples[0] = multiplesOf2;
         multiples[1] = multiplesOf3;
         multiples[2] = multiplesOf5;
@@ -69,31 +66,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         multiplesOf5.setOnDragListener(this);
         multiplesOf10.setOnDragListener(this);
 
+        // initialize and set click listeners for buttons
         retrieveButton = findViewById(R.id.retrieve);
         retrieveButton.setOnClickListener(this);
-
         clearButton = findViewById(R.id.clear);
         clearButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        // check which button was pressed
         switch (v.getId()) {
             case R.id.retrieve:
                 if (checkConnection()) {
-                    clear();
-                    /*
-                    this is for testing when the API is down
+                    clear(); // clear numbers and drop areas
+
+                    // this is for testing when the API is down
                     for (int i = 0; i < 4; i++) {
                         textViews[i].setText(String.valueOf(i));
                     }
-                    */
-                    new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
+
+                    // retrieve 4 random numbers from API
+                    //new RetrieveNumbersTask().execute("http://qrng.anu.edu.au/API/jsonI.php?length=4&type=uint8");
                 }
                 break;
             case R.id.clear:
-                // clear all the textviews
-                clear();
+                clear(); // clear numbers and drop areas
                 break;
         }
     }
@@ -107,51 +105,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public boolean checkConnection(){
-        ConnectivityManager connectMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectMgr.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            //fetch data
+    // check if the device is connected to the internet
+    public boolean checkConnection() {
+        ConnectivityManager connectMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+
+        try {
+            networkInfo = connectMgr.getActiveNetworkInfo(); // get network information if any
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        if(networkInfo != null && networkInfo.isConnected()) {
+            // connected to internet
             return true;
         } else {
-            //display error
+            // not connected to internet
             Toast.makeText(this, "no network connection", Toast.LENGTH_LONG).show();
             return false;
         }
     }
 
+    // called when the user has touched or started to drag a view
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            //the user has touched the View to drag it
-            //prepare the drag
+            // the user has touched a view, get data to be dragged
             ClipData data = ClipData.newPlainText("","");
             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-            //start dragging the item touched
+
+            // start dragging the item touched
             view.startDrag(data, shadowBuilder, view, 0);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
+    // called when a drag is happening
     @Override
     public boolean onDrag(View v, DragEvent dragEvent) {
         switch (dragEvent.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                //no action necessary
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
-                //no action necessary
                 break;
             case DragEvent.ACTION_DROP:
-                //handle the dragged view being dropped over a target view
+                // handle the dragged view being dropped over a target view
                 View view = (View) dragEvent.getLocalState();
 
-                // view dragged item is being dropped on
+                // view dragged item is being dropped on and the multiple of the drop area
                 TextView dropTarget = (TextView) v;
                 Integer dropTargetMultiple = Integer.valueOf((String) dropTarget.getContentDescription());
 
@@ -162,23 +167,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // boolean whether or not the dropped view is a multiple of the target view's value
                 Boolean isMultiple = false;
 
+                // check if the number being dragged is a multiple of the drop area's multiple
                 if (droppedValue % dropTargetMultiple == 0) {
                     isMultiple = true;
                 }
 
                 if (isMultiple) {
-                    //stop displaying the value where it was before it was dragged
+                    // stop displaying the value where it was before it was dragged
                     view.setVisibility(View.INVISIBLE);
 
-                    //update the text in the target view to reflect the data being dropped
+                    // update the text in the target view with the number being dropped
                     dropTarget.setText(dropTarget.getText() + " " + dropped.getText());
 
-                    //make it bold to highlight the fact that an item has been dropped
+                    // let there be bold
                     dropTarget.setTypeface(Typeface.DEFAULT_BOLD);
                 }
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                //no action necessary
                 break;
             default:
                 break;
